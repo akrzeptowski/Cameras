@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
+using Services.Dto;
 
 namespace Api.Controllers
 {
@@ -8,9 +9,10 @@ namespace Api.Controllers
     public class CamerasController(ICameraService cameraService) : Controller
     {
         [HttpGet]
-        public IActionResult Get()
+        public async Task<ActionResult<List<Camera>>> Get()
         {
-            return Ok(cameraService.GetCameras());
+            var cameras = await cameraService.GetCameras();
+            return Ok(cameras);
         }
     }
 }

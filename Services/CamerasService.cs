@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Options;
 using Services.Abstractions;
+using Services.Configuration;
 using Services.DataAccess;
 using Services.Dto;
 
@@ -8,11 +10,12 @@ namespace Services
     public class CamerasService(
         ICamerasFileReader camerasFileReader,
         IValidator<CameraFileRecord> validator,
-        ICameraFactory cameraFactory) : ICameraService
+        ICameraFactory cameraFactory,
+        IOptions<CamerasFileConfiguration> configuration) : ICameraService
     {
-        public IList<Camera> GetCameras()
+        public async Task<IList<Camera>> GetCameras()
         {
-            var records = camerasFileReader.GetRecords();
+            var records = await camerasFileReader.GetRecords(configuration.Value.Path);
             var validRecords = new List<Camera>();
             foreach (var record in records)
             {

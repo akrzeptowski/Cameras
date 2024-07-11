@@ -2,5 +2,5 @@
 
 public interface ICamerasFileReader
 {
-    IList<CameraFileRecord> GetRecords();
+    Task<IList<CameraFileRecord>> GetRecords(string path);
 }

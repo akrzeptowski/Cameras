@@ -1,6 +1,7 @@
 using FluentValidation;
 using Services;
 using Services.Abstractions;
+using Services.Configuration;
 using Services.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +13,7 @@ builder.Services.AddScoped<ICamerasFileReader, CamerasFileReader>();
 builder.Services.AddScoped<ICameraService, CamerasService>();
 builder.Services.AddScoped<ICameraFactory, CameraFactory>();
 builder.Services.AddScoped<IValidator<CameraFileRecord>, CameraFileRecordValidator>();
-
+builder.Services.Configure<CamerasFileConfiguration>(builder.Configuration.GetSection(CamerasFileConfiguration.SectionName));
 
 var app = builder.Build();
 

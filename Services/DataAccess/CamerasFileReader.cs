@@ -6,9 +6,9 @@ namespace Services.DataAccess
 {
     public class CamerasFileReader() : ICamerasFileReader
     {
-        public IList<CameraFileRecord> GetRecords()
+        public async Task<IList<CameraFileRecord>> GetRecords(string path)
         {
-            using var stream = new StreamReader("./cameras-defb.csv");
+            using var stream = new StreamReader(path);
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 Delimiter = ";",
@@ -16,9 +16,14 @@ namespace Services.DataAccess
             };
 
             using var csvReader = new CsvReader(stream, config);
-            var records = csvReader.GetRecords<CameraFileRecord>();
+            var records = csvReader.GetRecordsAsync<CameraFileRecord>();
+            var result = new List<CameraFileRecord>();
+            await foreach (var record in records)
+            {
+                result.Add(record);
+            }
 
-            return records.ToList();
+            return result;
         }
     }
 }
